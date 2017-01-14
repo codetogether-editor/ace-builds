@@ -6693,11 +6693,13 @@ var Document = function(textOrLines) {
         console.warn("Use of document.insertNewLine is deprecated. Use insertMergedLines(position, ['', '']) instead.");
         return this.insertMergedLines(position, ["", ""]);
     };
-    this.insert = function(position, text) {
+    this.insert = function(position, text, isRemote) {
+        isRemote = isRemote || false;
+
         if (this.getLength() <= 1)
             this.$detectNewLine(text);
         
-        return this.insertMergedLines(position, this.$split(text));
+        return this.insertMergedLines(position, this.$split(text), isRemote);
     };
     this.insertInLine = function(position, text) {
         var start = this.clippedPos(position.row, position.column);
@@ -6762,7 +6764,9 @@ var Document = function(textOrLines) {
         }
         this.insertMergedLines({row: row, column: column}, lines);
     };    
-    this.insertMergedLines = function(position, lines) {
+    this.insertMergedLines = function(position, lines, isRemote) {
+        isRemote = isRemote || false;
+
         var start = this.clippedPos(position.row, position.column);
         var end = {
             row: start.row + lines.length - 1,
@@ -6773,19 +6777,23 @@ var Document = function(textOrLines) {
             start: start,
             end: end,
             action: "insert",
-            lines: lines
+            lines: lines,
+            isRemote: isRemote
         });
         
         return this.clonePos(end);
     };
-    this.remove = function(range) {
+    this.remove = function(range, isRemote) {
+        isRemote = isRemote || false;
+
         var start = this.clippedPos(range.start.row, range.start.column);
         var end = this.clippedPos(range.end.row, range.end.column);
         this.applyDelta({
             start: start,
             end: end,
             action: "remove",
-            lines: this.getLinesForRange({start: start, end: end})
+            lines: this.getLinesForRange({start: start, end: end}),
+            isRemote: isRemote
         });
         return this.clonePos(start);
     };
