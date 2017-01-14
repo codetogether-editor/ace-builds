@@ -1,4 +1,4 @@
-Ace (Ajax.org Cloud9 Editor)
+Ace (Ajax.org Cloud9 Editor) for CodeTogether project
 ============================
 [![CDNJS](https://img.shields.io/cdnjs/v/ace.svg)](https://cdnjs.com/libraries/ace)
 
